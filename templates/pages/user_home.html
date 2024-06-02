@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %} Home {% endblock %}
+{% block page_title %} Bosh Sahifa {% endblock  %}
+
+{% block user %}
+
+ <div class="card card-solid">
+    <div class="card-body pb-0">
+        Categoriyalar: {% for i in ctgs %}
+        {% if i == root %}
+            <span class="btn btn-info active">{{ i.name }}</span>
+        {% else %}
+            <a href="{% url 'cars-filter' key='ctg' pk=i.id %}"><span class="btn btn-info">{{ i.name }}</span></a>
+        {% endif %}
+
+        {% endfor %}
+
+        <hr>
+        Brandlar: {% for i in brands %}
+        {% if i == root %}
+            <span class="btn btn-primary active">{{ i.name }}</span>
+        {% else %}
+            <a href="{% url 'cars-filter' key='brand' pk=i.id %}"><span class="btn btn-primary">{{ i.name }}</span></a>
+        {% endif %}
+
+        {% endfor %}
+
+        <hr>
+        {% if request.session.success %}
+
+            <div class="alert alert-success alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <h5><i class="icon fas fa-check"></i> Muaffaqiyatli!</h5>
+                  {{ request.session.success }}
+            </div>
+
+        <hr>
+        {% endif %}
+      <div class="row d-flex align-items-stretch">
+        {% for i in cars %}
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                  {{ i.ctg }}
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>{{ i.name }}</b></h2>
+                      <p class="text-muted text-sm"><b>About: </b> {{ i.xk }} </p>
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
+                            Brand: <mark>{{ i.brand }}</mark> </li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-coins"></i></span>
+                            Ijara Narxi: <mark>{{ i.price }}</mark> </li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-coins"></i></span>
+                            Ishlab Chiqilgan yil: <mark>{{ i.yili }}</mark> </li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-coins"></i></span>
+                            Davlat raqami: <mark>{{ i.raqam }}</mark> </li>
+                      </ul>
+                    </div>
+                    <div class="col-5 text-center">
+                        <a href="{{ i.img.url }}" target="_blank"><img src="{{ i.img.url }}" alt="" class="img-circle img-fluid"></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a data-toggle="modal" data-target="#modal-sm-arenda-{{ i.id }}" class="btn btn-sm btn-primary">
+                      <i class="fas fa-key"></i> Shu Moshinani arendaga olish
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+    <br>
+        <div class="pagination">
+            <span class="step-links">
+                {% if cars.has_previous %}
+                    <a href="?page=1" class="btn btn-primary btn-sm">&laquo;first</a>
+                    <a href="?page={{ cars.previous_page_number }}" class="btn btn-primary btn-sm">prev</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ cars.number }} of {{ cars.paginator.num_pages }}.
+                </span>
+
+                {% if roots.has_next %}
+                    <a href="?page={{ cars.next_page_number }}" class="btn btn-primary btn-sm">next</a>
+                    <a href="?page={{ cars.paginator.num_pages }}"
+                       class="btn btn-primary btn-sm">last&raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    <hr>
+
+    </div>
+</div>
+
+
+
+
+
+
+{% for i in cars %}
+<div class="modal fade" id="modal-sm-arenda-{{ i.id }}">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Arenda Moshina</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form method="post" action="{% url 'arenda' car_id=i.id %}" class="modal-footer justify-content-between">
+         {% csrf_token %}
+          <div class="modal-body">
+            <p>Necha Kunga Arenda Olmoqchisz</p>
+              <input type="text" name="day" value="1" class="form-control">
+          </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-primary">Yuborish</button>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+
+
+
+
+
+{% endblock  %}

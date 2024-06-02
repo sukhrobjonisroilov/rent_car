@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %} {{ key.capitalize }} {% endblock %}
+{% block page_title %} {{ p_title }} {% endblock  %}
+{% block pagetitle %} {{ key.capitalize }}s {% endblock  %}
+
+{% block content %}
+
+<div class="row">
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ p_title }} Ro'yxati</h3>
+          <a class="btn btn-info float-right" type="button" data-toggle="modal" data-target="#modal-sm-add">Add</a>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>№</th>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in roots %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ i.name }}</td>
+                  <td>
+                      <a data-toggle="modal" data-target="#modal-sm-edit-{{ i.id }}" title="Edit qilish" class="btn btn-info">
+                          <i class="fas fa-pen"></i>
+                      </a>
+                      <a data-toggle="modal" data-target="#modal-sm-del-{{ i.id }}" title="O'chirvorish" class="btn btn-danger">
+                          <i class="fas fa-trash"></i>
+                      </a>
+                  </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+            <br>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if roots.has_previous %}
+                        <a href="?page=1" class="btn btn-primary btn-sm">&laquo;first</a>
+                        <a href="?page={{ roots.previous_page_number }}" class="btn btn-primary btn-sm">prev</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ roots.number }} of {{ roots.paginator.num_pages }}.
+                    </span>
+
+                    {% if roots.has_next %}
+                        <a href="?page={{ roots.next_page_number }}" class="btn btn-primary btn-sm">next</a>
+                        <a href="?page={{ roots.paginator.num_pages }}"
+                           class="btn btn-primary btn-sm">last&raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            <hr>
+
+        </div>
+        <!-- /.card-body -->
+      </div>
+
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modal-sm-add">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">New {{ p_title }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form action="" method="post" class="modal-footer justify-content-between">
+         {% csrf_token %}
+          <div class="modal-body">
+            <p>Yangi {{ key }} ni kiriting</p>
+              <input type="text" name="name" placeholder="{{ p_title }} Nomi">
+          </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-primary">Saqlash</button>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+{% for i in roots %}
+<div class="modal fade" id="modal-sm-edit-{{ i.id }}">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Change {{ p_title }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form action="{% url 'ctg_brand_edit' key=key pk=i.id %}" method="post" class="modal-footer justify-content-between">
+         {% csrf_token %}
+          <div class="modal-body">
+            <p>{{ i.name }} ga Yangi Nom</p>
+              <input type="text" name="name" placeholder="{{ p_title }} Nomi">
+          </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+        <button type="submit" class="btn btn-primary">Saqlash</button>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+
+{% for i in roots %}
+<div class="modal fade" id="modal-sm-del-{{ i.id }}">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Ro'stdan ham {{ i.name }} ni o'chirasizmi?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+        <a  href="{% url 'ctg_brand_del' key=key pk=i.id delete=1 %}" type="submit" class="btn btn-primary">O'chirish</a>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+{% endfor %}
+
+
+{% endblock %}

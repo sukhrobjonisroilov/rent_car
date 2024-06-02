@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %} Users {% endblock %}
+{% block page_title %} Foydalanuvchilar {% endblock  %}
+{% block pagetitle %} Users {% endblock  %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Foydalanuvchilar ro'yxati</h3>
+              <a href="{% url 'users-add' ut=ut status='add' %}" class="btn btn-info float-right">Add</a>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>№</th>
+                  <th>FIO</th>
+                  <th>Phone</th>
+                  <th>Pasport Seriasi</th>
+                  <th>Foydalanuvchi nomi</th>
+                  <th>Guvohnoma yili</th>
+                  <th>Guvohnoma Seriasi</th>
+                  <th>Guvohnoma Categoriyasi</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in users %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ i.fio }}
+                          {% if request.user == i %}
+                          <sup class="badge badge-warning">Bu siz</sup>
+                          {% endif %}
+                      </td>
+                      <td>{{ i.phone }}</td>
+                      <td>{{ i.seria_ps }}</td>
+                      <td>{{ i.username }}</td>
+                      <td>{{ i.g_year }}</td>
+                      <td>{{ i.g_seria }}</td>
+                      <td>{{ i.g_ctg }}</td>
+                      <td>
+                          <a href="{% url 'user-profile' user_id=i.id %}" class="btn btn-info">
+                              <i class="fas fa-info"></i>
+                          </a>
+                          <a href="{% url 'users-edit' ut=ut status='form' pk=i.id %}" class="btn btn-info m-2" >
+                              <i class="fas fa-pen"></i>
+                          </a>
+                          <a  class="btn btn-info" type="button" data-toggle="modal" data-target="#modal-sm-{{ i.id }}">
+                              <i class="fas fa-key"></i>
+                          </a>
+                      </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+        {% if status == 'form' or status == 'add' %}
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Tezkor Forma</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <form method="post" class="form-group col-md-12" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-item">
+                        {% bootstrap_field form.fio %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.phone %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.seria_ps %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.username %}
+                    </div>
+                    {% if status == 'add' %}
+                    <div class="form-group">
+                        {% bootstrap_field form.user_type %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.password %}
+                    </div>
+                    {% else %}
+                        <div class="form-group" hidden>
+                            {% bootstrap_field form.user_type %}
+                        </div>
+                        <div class="form-group" hidden>
+                            {% bootstrap_field form.password %}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="g_year">Guvohnoma Yili {{ user.g_year|date:'d m Y' }}</label><br>
+                        <input type="date" id="g_year" class="form-control" value="{{ user.g_year|date:'d-m-Y' }}" name="g_year">
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.g_seria %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.g_ctg %}
+                    </div>
+                    <button type="submit" class="btn btn-success"> Saqlash</button>
+                    <a href="{% url 'users' ut=ut %}" class="btn btn-secondary"> Bekor qilish</a>
+
+                </form>
+
+
+            </div>
+
+
+
+            <!-- /.card-body -->
+          </div>
+          {% endif %}
+
+
+    </div>
+</div>
+
+{% for i in users %}
+    <div class="modal fade" id="modal-sm-{{ i.id }}">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Change Password</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <form action="{% url 'users-chp' user_id=i.id %}" method="post" class="modal-footer justify-content-between">
+             {% csrf_token %}
+              <div class="modal-body">
+                <p>Yangi Parolni kiriting</p>
+                  <input type="text" name="password" placeholder="Parolni kiriting">
+              </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Bekor qilish</button>
+            <button type="submit" class="btn btn-primary">Saqlash</button>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+{% endfor %}
+
+
+
+{% endblock %}
+
+
+

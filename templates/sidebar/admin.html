@@ -1,0 +1,47 @@
+<li class="nav-item has-treeview menu-open">
+<a href="#" class="nav-link active">
+  <i class="nav-icon fas fa-tachometer-alt"></i>
+  <p>
+    Menular bo'limi
+    <i class="right fas fa-angle-left"></i>
+  </p>
+</a>
+<ul class="nav nav-treeview">
+  <li class="nav-item">
+    <a href="{% url 'users' ut=2 %}" class="nav-link {{ users_active }}">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Foydalanuvchilar</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'cars' %}" class="nav-link {{ cars_active }}">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Mashinalar</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="#" class="nav-link">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Monitoring</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'arenda-list' %}" class="nav-link">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Arendalar</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'ctg_brand_list' key='brand' %}" class="nav-link {{ brand_active }}">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Brandlar</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'ctg_brand_list' key='ctg' %}" class="nav-link {{ ctg_active }}">
+      <i class="far fa-circle nav-icon"></i>
+      <p>Categoriyalar</p>
+    </a>
+  </li>
+</ul>
+</li>

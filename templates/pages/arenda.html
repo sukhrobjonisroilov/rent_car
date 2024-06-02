@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %} {{ key.capitalize }} {% endblock %}
+{% block page_title %} {{ p_title }} {% endblock  %}
+{% block pagetitle %} {{ key.capitalize }}s {% endblock  %}
+
+{% block content %}
+
+<div class="row">
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <a href="{% url 'arenda-list' %}" class="card-title"> Ro'yxati</a>
+          <a href="{% url 'arenda-view' %}" class="btn btn-info float-right" >Umumiy summa: {{ summa }}</a>
+        </div>
+         {% if request.session.error %}
+
+            <div class="alert alert-success alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <h5><i class="icon fas fa-check"></i> Xatolik!</h5>
+                  {{ request.session.error }}
+            </div>
+        {% endif %}
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Car</th>
+              <th>Car raqam</th>
+              <th>Yili</th>
+              <th>Arenda(1 kun)</th>
+              <th>Arenda(umumiy)</th>
+              <th>To'lov</th>
+              <th>Muddat</th>
+              <th>Holat</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in arendalar %}
+                <tr>
+                  <td>{{ i.id }}</td>
+                  <td>{{ i.fio }}</td>
+                  <td>{{ i.name }}</td>
+                  <td>{{ i.raqam }}</td>
+                  <td>{{ i.yili }}</td>
+                  <td>{{ i.price }}</td>
+                  <td>{{ i.summa }}</td>
+                  <td>{{ i.pay_type }}</td>
+                  <td>{{ i.date_from }} >> {{ i.date_to}} </td>
+
+
+                    {% if i.status == 0 %}
+                  <td class="text-warning">Tasdiqlanmagan </td>
+                  <td>
+                      <a href="{% url 'arenda-manage' pk=i.id status=1 %}" title="tasdiqlash" class="btn btn-warning">
+                          <i class="fas fa-check"></i>
+                      </a>
+                      <a href="{% url 'arenda-manage' pk=i.id status=3 %}" title="Bekor qilish" class="btn btn-danger">
+                          <i class="fas fa-trash"></i>
+                      </a>
+                  </td>
+                    {% elif i.status == 1 %}
+                     <td class="text-success">Tasdiqlangan </td>
+                    <td>
+                      <a href="{% url 'arenda-manage' pk=i.id status=2 %}" class="btn btn-success">
+                          <i class="fas fa-handshake"></i>
+                      </a>
+                  </td>
+                    {% elif i.status == 2 %}
+                     <td class="text-primary">Tugallangan </td>
+                    <td >
+                      <a href="#" class="btn btn-success">
+                          <i class="fas fa-thumbs-up"></i>
+                      </a>
+                  </td>
+                    {% elif i.status == 3 %}
+                     <td class="text-danger">Bekor qilingan </td>
+                    <td>
+                      <a href="#" class="btn btn-danger">
+                           <i class="fas fa-thumbs-down"></i>
+                      </a>
+                  </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+        <!-- /.card-body -->
+      </div>
+
+
+    </div>
+</div>
+
+
+
+
+{% endblock %}
