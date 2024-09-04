@@ -14,13 +14,14 @@ from core.models import User, Card
 def sign_in(request):
     if request.POST:
         pas = request.POST.get("pass")
-        phone = request.POST.get("phone")
-        user = User.objects.filter(phone=phone).first()
+        username = request.POST.get("username")
+        print(username,"$$$$$$$$$$$$$$$$$$$$")
+        user = User.objects.filter(username=username).first()
 
         if not user:
-            return render(request, 'auth/login.html', {"error": "Phone Yoki Password Xato"})
+            return render(request, 'auth/login.html', {"error": "username or Password error"})
         if not user.check_password(pas):
-            return render(request, 'auth/login.html', {"error": "Phone Yoki Password Xato"})
+            return render(request, 'auth/login.html', {"error": "username or Password error"})
         if not user.is_active:
             return render(request, 'auth/login.html', {"error": "Bu Foydalanuvchi qora ro'yxatda"})
 

@@ -4,6 +4,7 @@ from core.dashboard.arenda import arenda_olish, arenda_list, manage_arenda, aren
 from core.dashboard.auth import sign_in, sign_out, manage_user, change_password, user_profile, top_up_user, \
     add_card_to_user
 from core.dashboard.cars import manage_cars, manage_brand_and_ctg, car_filter
+from core.dashboard.users import manage_sanctioned_individuals, upload_excel
 from core.dashboard.view import index, profile
 
 urlpatterns = [
@@ -41,6 +42,14 @@ urlpatterns = [
     path('arenda/list/', arenda_list, name='arenda-list'),
     path('arenda/pk-<int:pk>/st-<int:status>/', manage_arenda, name='arenda-manage'),
     path('arenda/view/', arenda_view, name='arenda-view'),
+
+    path('black-list/',manage_sanctioned_individuals,name='black_list'),
+    path('black/form/<status>/',manage_sanctioned_individuals,name='black_list-add'),
+    path('upload-excel/', upload_excel, name='upload_excel'),
+
+
+
+
 
 
 

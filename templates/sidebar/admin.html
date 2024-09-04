@@ -7,41 +7,16 @@
   </p>
 </a>
 <ul class="nav nav-treeview">
-  <li class="nav-item">
-    <a href="{% url 'users' ut=2 %}" class="nav-link {{ users_active }}">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Foydalanuvchilar</p>
-    </a>
+
+    <li class="nav-item">
+    <a href="{% url 'black_list' %}" class="nav-link {{ black_list }}">
+  <i class="far fa-circle nav-icon"></i>
+  <p>Черный список</p>
+</a>
+
   </li>
-  <li class="nav-item">
-    <a href="{% url 'cars' %}" class="nav-link {{ cars_active }}">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Mashinalar</p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Monitoring</p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="{% url 'arenda-list' %}" class="nav-link">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Arendalar</p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="{% url 'ctg_brand_list' key='brand' %}" class="nav-link {{ brand_active }}">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Brandlar</p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="{% url 'ctg_brand_list' key='ctg' %}" class="nav-link {{ ctg_active }}">
-      <i class="far fa-circle nav-icon"></i>
-      <p>Categoriyalar</p>
-    </a>
-  </li>
+    
+
+
 </ul>
 </li>

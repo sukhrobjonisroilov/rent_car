@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %} Черный список {% endblock %}
+{% block page_title %} Черный список {% endblock  %}
+{% block pagetitle %} Черный список {% endblock  %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                
+                
+              <h3 class="card-title">Черный список</h3>
+              <a href="{% url 'black_list-add' status='add' %}" class="btn btn-info float-right">Add</a><br><br>
+                <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'upload_excel' %}">
+        {% csrf_token %}
+                    
+        <!-- Fayl tanlash inputi yashirin -->
+        <input type="file" id="file-input" name="excel_file" style="display: none;" onchange="document.getElementById('upload-form').submit();">
+        <!-- Fayl tanlash tugmasi -->
+        <a href="#" class="btn btn-info float-right" onclick="document.getElementById('file-input').click();">добавить файл</a> <br>
+
+    </form>
+                <form method="get" action="{% url 'black_list' %}" class="form-inline mb-4">
+        <div class="form-group mr-2">
+            <label for="sanction-status" class="mr-2">Sanction Status:</label>
+            <select id="sanction-status" name="sanction_status" class="form-control">
+
+                <option value="national_terrorist_suspect" {% if selected_sanction_status == 'national_terrorist_suspect' %}selected{% endif %} >National Terrorist Suspect</option>
+                <option value="criminal_sanction_list" {% if selected_sanction_status == 'criminal_sanction_list' %}selected{% endif %} >Criminal Sanction List</option>
+                <option value="national_sanction_list"  {% if selected_sanction_status == 'national_sanction_list' or not selected_sanction_status %}selected{% endif %}>National Sanction List</option>
+                <option value="sanction_records" {% if selected_sanction_status == 'sanction_records' %}selected{% endif %} >Sanction Records</option>
+            </select>
+
+
+        </div>
+                <div class="input-group input-group-sm mr-2">
+                      <label for="passport_series" class="mr-2">Passport Series:</label>
+    <input class="form-control form-control-navbar" type="text" name="passport_series" placeholder="Passport Series" aria-label="Passport Series" value="{{ request.GET.passport_series }}">
+    <div class="input-group-append">
+        <button class="btn btn-navbar" type="submit">
+           
+        </button>
+    </div>
+</div>
+<div class="input-group input-group-sm">
+      <label for="passport_series" class="mr-2">Full Name:</label>
+    <input class="form-control form-control-navbar" type="text" name="name" placeholder="Name" aria-label="Name" value="{{ request.GET.name }}">
+    <div class="input-group-append">
+        <button class="btn btn-navbar" type="submit">
+           
+        </button>
+    </div>
+</div>
+
+
+        <button type="submit" class="btn btn-primary">Filter</button><br><br>
+
+    </form>
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+               {% if selected_sanction_status == 'national_sanction_list' %}
+                <thead>
+                <tr>
+                  <th>№</th>
+                  <th>ФИО</th>
+                  <th>Дата рождения</th>
+                  <th>Место рождения</th>
+                  <th>Серия паспорта</th>
+                  <th>Номер паспорта</th>
+                  <th>Дата выдачи</th>
+                  <th>Адрес</th>
+                    
+
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for i in individuals %}
+                    <tr>
+                      <td>{{ forloop.counter0|add:start_index }}</td>
+                      <td>{{ i.surname_cyrillic }}  {{ i.name_cyrillic }}</td>
+                      <td>{{ i.birth_date }}</td>
+                      <td>{{ i.birth_place }}</td>
+                      <td>{{ i.passport_series }}</td>
+                      <td>{{ i.passport_number }}</td>
+                        <td>{{ i.passport_issue_date }}</td>
+            
+                        <td>{{ i.address }}</td>
+                       
+                        
+                     
+                    </tr>
+                {% endfor %}
+                </tbody>
+                  {% elif selected_sanction_status == 'criminal_sanction_list' %}
+                     <thead>
+                <tr>
+                  <th>№</th>
+                  <th>ФИО</th>
+                  <th>Дата рождения</th>
+                  <th>Место рождения</th>
+                  <th>Серия паспорта</th>
+                  <th>Вид иного документа</th>
+                  <th>Дата уголовного дела</th>
+
+
+
+                </tr>
+                </thead>
+                   <tbody>
+
+                {% for i in individuals %}
+                    <tr>
+                      <td>{{ forloop.counter0|add:start_index }}</td>
+                      <td>{{ i.surname_cyrillic }}</td>
+                      <td>{{ i.birth_date }}</td>
+                      <td>{{ i.birth_place }}</td>
+                      <td>{{ i.document_series }}</td>
+                        <td>{{ i.document_type }}</td>
+                      <td>{{ i.case_date }}</td>
+
+
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+                   {% else %}
+                    <thead>
+                <tr>
+                  <th>№</th>
+                  <th>ФИО</th>
+                  <th>Дата рождения</th>
+                  <th>Место рождения</th>
+                  <th>Серия паспорта</th>
+                  <th>Номер паспорта</th>
+                  <th>Дата выдачи</th>
+                  <th>Адрес</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for i in individuals %}
+                    <tr>
+                      <td>{{ forloop.counter0|add:start_index }}</td>
+                      <td>{{ i.surname_cyrillic }}  {{ i.name_cyrillic }}</td>
+                      <td>{{ i.birth_date }}</td>
+                      <td>{{ i.birth_place }}</td>
+                      <td>{{ i.passport_series }}</td>
+                      <td>{{ i.passport_number }}</td>
+                        <td>{{ i.passport_issue_date }}</td>
+
+                        <td>{{ i.address }}</td>
+
+
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+              {% endif  %}
+              </table>
+              <!-- Sahifalash uchun tugmalar -->
+  <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?{% for key, value in query_params.items %}{{ key }}={{ value }}&{% endfor %}page=1">&laquo; first</a>
+                            <a href="?{% for key, value in query_params.items %}{{ key }}={{ value }}&{% endfor %}page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?{% for key, value in query_params.items %}{{ key }}={{ value }}&{% endfor %}page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?{% for key, value in query_params.items %}{{ key }}={{ value }}&{% endfor %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+        {% if status == 'form' or status == 'add' %}
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Tezkor Forma</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <form method="post" class="form-group col-md-12" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-item">
+                        {% bootstrap_field form.name %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.brand %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.ctg %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.raqam %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.xk %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.price %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.status %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.yili %}
+                    </div>
+                    <div class="form-group">
+                        {% bootstrap_field form.img %}
+                    </div>
+                    <button type="submit" class="btn btn-success"> Saqlash</button>
+                    <a href="{% url 'cars' %}" class="btn btn-secondary"> Bekor qilish</a>
+
+                </form>
+
+
+            </div>
+
+
+
+            <!-- /.card-body -->
+          </div>
+          {% endif %}
+
+
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
